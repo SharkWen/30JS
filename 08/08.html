@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Canvas</title>
+    <style>
+        html, body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+ctx.lineWidth = 100;
+ctx.lineJoin = "round";
+ctx.lineCap = "round";
+let lastX = 0
+let lastY = 0
+let hue = 0
+let direction = true;
+let lock = false;
+ function draw(e){
+    if(!lock){ return; }
+     ctx.beginPath();
+     ctx.strokeStyle = `hsl(${hue},100%,50%)`;
+     ctx.moveTo(lastX,lastY);
+     ctx.lineTo(e.offsetX,e.offsetY);
+     ctx.stroke();
+     [lastX,lastY] = [e.offsetX,e.offsetY]
+     hue++
+     if(hue>=360){
+         hue = 0
+     }
+     if(ctx.lineWidth <=10 || ctx.lineWidth>=100){
+         direction = !direction
+     }
+     if(direction){
+         ctx.lineWidth++
+     }else{
+         console.log("--")
+         ctx.lineWidth--
+     }
+ }
+ canvas.addEventListener('mousedown',(e)=>{
+     lock = true
+     lastX = e.offsetX;
+     lastY = e.offsetY;
+    // [lastX,lastY] = [e.offsetX,e.offsetY]
+ })
+ canvas.addEventListener('mousemove',draw)
+ canvas.addEventListener('mouseup',()=> lock = false)
+ canvas.addEventListener('mouseout',()=>lock = false)
+</script>
+</body>
+</html>
